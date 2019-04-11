@@ -16,11 +16,10 @@ namespace WebJetMoviesAPI.Controllers
             _apiService = apiService;
         }
 
-        // GET api/values
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<string>>> Get() => Ok(await _apiService.Filmworld.GetAllAsync());
+        public async Task<ActionResult<IEnumerable<string>>> Get() =>
+            Ok(await _apiService.Filmworld.GetAllAsync("movies"));
 
-        // GET api/values/5
         [HttpGet("{id}")]
         public ActionResult<string> Get(int id)
         {
