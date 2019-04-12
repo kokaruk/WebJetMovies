@@ -14,20 +14,7 @@ namespace WebJetMoviesAPI.Utils
     public static class PolicyHandler
     {
         private static ILogger _logger = StaticLogger.CreateLogger("PolicyHandler");
-
-
-        public static IAsyncPolicy<HttpResponseMessage> GetCachePolicy()
-        {
-            var memoryCache = new MemoryCache(new MemoryCacheOptions());
-            var memoryCacheProvider = new MemoryCacheProvider(memoryCache);
-            var cachePolicy = Policy.CacheAsync<HttpResponseMessage>(memoryCacheProvider.AsyncFor<HttpResponseMessage>(), 
-                TimeSpan.FromMinutes(5));
             
-            return cachePolicy;
-        }
-            
-            
-        
         public static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy() =>
             HttpPolicyExtensions
                 .HandleTransientHttpError()

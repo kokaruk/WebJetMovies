@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,7 @@ using Polly.Registry;
 using Polly.Timeout;
 using WebJetMoviesAPI.Core;
 using WebJetMoviesAPI.Data;
+using WebJetMoviesAPI.Utils;
 using static WebJetMoviesAPI.Utils.PolicyHandler;
 
 namespace WebJetMoviesAPI
@@ -39,21 +41,9 @@ namespace WebJetMoviesAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // caching
-            services.AddMemoryCache();
-            services.AddSingleton<IAsyncCacheProvider, MemoryCacheProvider>();
-
-            services.AddSingleton<Polly.Registry.IReadOnlyPolicyRegistry<string>, Polly.Registry.PolicyRegistry>((serviceProvider) =>
-            {
-                PolicyRegistry registry = new PolicyRegistry();
-                registry.Add("myCachePolicy", 
-                    Policy.CacheAsync<HttpResponseMessage>(
-                        serviceProvider
-                            .GetRequiredService<IAsyncCacheProvider>()
-                            .AsyncFor<HttpResponseMessage>(),
-                        TimeSpan.FromMinutes(5)));
-                return registry;
-            });
+            // configuration middleware partiall access
+            services.Configure<CinemaServices>(Configuration.GetSection(nameof(CinemaServices)));
+           
             // working behind proxy
             services.Configure<ForwardedHeadersOptions>(options =>
             {
@@ -62,10 +52,14 @@ namespace WebJetMoviesAPI
                 options.KnownProxies.Add(IPAddress.Parse("192.168.1.75"));
             });
             
+            // response caching middleware
             services.AddResponseCaching();
             
-            services.AddMvc().AddJsonOptions(
-                options =>
+            // memory cache
+            services.AddMemoryCache();
+            
+            services.AddMvc()
+                .AddJsonOptions( options =>
                 {
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
@@ -81,7 +75,6 @@ namespace WebJetMoviesAPI
                         c.BaseAddress = new Uri(Configuration["WebApiUrl"]);
                     })
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5))
-                .AddPolicyHandler(GetCachePolicy())
                 .AddPolicyHandler(GetRetryPolicy())
                 .AddPolicyHandler(GetCircuitBreakerPolicy())
                 .AddPolicyHandler(GetTimeOutPolicy());
@@ -99,9 +92,34 @@ namespace WebJetMoviesAPI
             {
                 app.UseHsts();
             }
-
+            
+            // Shows UseCors with CorsPolicyBuilder.
+            app.UseCors(builder =>
+                builder
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowAnyOrigin());
+            
             app.UseHttpsRedirection();
             app.UseMvc();
+            
+            app.Use(async (context, next) =>
+            {
+                // response caching config
+                context.Response.GetTypedHeaders().CacheControl = 
+                    new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
+                    {
+                        Public = true,
+                        MaxAge = TimeSpan.FromMinutes(1)
+                    };
+                context.Response.Headers[Microsoft.Net.Http.Headers.HeaderNames.Vary] = 
+                    new string[] { "Accept-Encoding" };
+
+                await next();
+            });
+            
+            app.UseResponseCaching();
+            
         }
     }
 }
