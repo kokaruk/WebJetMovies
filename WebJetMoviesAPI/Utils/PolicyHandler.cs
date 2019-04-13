@@ -15,25 +15,25 @@ namespace WebJetMoviesAPI.Utils
     {
         private static ILogger _logger = StaticLogger.CreateLogger("PolicyHandler");
             
-        public static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy() =>
+        public static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(int seconds = 1) =>
             HttpPolicyExtensions
                 .HandleTransientHttpError()
                 .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
                 .Or<TimeoutRejectedException>()
-                .WaitAndRetryForeverAsync(
+                .WaitAndRetryAsync(11,
                     retryAttempt =>
                     {
                         _logger.LogWarning($"Retry count {retryAttempt}");
-                        return TimeSpan.FromSeconds(3);
+                        return TimeSpan.FromSeconds(2);
                     });
-        public static IAsyncPolicy<HttpResponseMessage> GetTimeOutPolicy(int seconds = 3) =>
+        public static IAsyncPolicy<HttpResponseMessage> GetTimeOutPolicy(int seconds = 1) =>
             Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(seconds));
 
-        public static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy()
+        public static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy(int seconds = 1)
         {
             return HttpPolicyExtensions
                 .HandleTransientHttpError()
-                .CircuitBreakerAsync(5, TimeSpan.FromSeconds(3));
+                .CircuitBreakerAsync(5, TimeSpan.FromSeconds(seconds));
         }
     }
 }

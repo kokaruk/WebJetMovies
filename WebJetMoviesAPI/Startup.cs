@@ -77,16 +77,16 @@ namespace WebJetMoviesAPI
                         c.DefaultRequestHeaders.Add("x-access-token", Configuration["x-access-token"]);
                         c.BaseAddress = new Uri(Configuration["WebApiUrl"]);
                     })
-                .SetHandlerLifetime(TimeSpan.FromMinutes(5))
+                .SetHandlerLifetime(TimeSpan.FromMinutes(30))
                 .AddPolicyHandler(GetRetryPolicy())
                 .AddPolicyHandler(GetCircuitBreakerPolicy())
                 .AddPolicyHandler(GetTimeOutPolicy());
 
             services.AddHttpClient<IPosterService, PosterService>()
-                .SetHandlerLifetime(TimeSpan.FromMinutes(5))
-                .AddPolicyHandler(GetRetryPolicy())
-                .AddPolicyHandler(GetCircuitBreakerPolicy())
-                .AddPolicyHandler(GetTimeOutPolicy());
+                .SetHandlerLifetime(TimeSpan.FromMinutes(30))
+                .AddPolicyHandler(GetRetryPolicy(3))
+                .AddPolicyHandler(GetCircuitBreakerPolicy(3))
+                .AddPolicyHandler(GetTimeOutPolicy(3));
         }
 
 

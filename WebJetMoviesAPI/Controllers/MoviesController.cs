@@ -79,16 +79,17 @@ namespace WebJetMoviesAPI.Controllers
                                       .Take(_paginationSettings.Value.ItemsLimit)
                                       .Any();
 
-                var maxItems = new List<CheapestMovieResponse<Movie>>();
-                pageListingMovies.ForEach( mv =>
-                {
-                    var cheapestResponse = GetCheapestMovie(mv.Year, mv.Title).Result;
-                    maxItems.Add(cheapestResponse);
-                });
+//                var maxItems = new List<CheapestMovieResponse<Movie>>();
+//                pageListingMovies.ForEach( mv =>
+//                {
+//                    var cheapestResponse = GetCheapestMovie(mv.Year, mv.Title).Result;
+//                    maxItems.Add(cheapestResponse);
+//                });
 
-                return Ok(new PageCollectionResponse<CheapestMovieResponse<Movie>>
+                return Ok(new PageCollectionResponse<Movie>
                 {
-                    Items = maxItems,
+//                    Items = pageListingMovies,
+                    Items = await FixPosterAddresses(pageListingMovies),
                     NextPage = nextHasData ? new Uri($"{baseUrl}{page.Value + 1}") : null,
                     PreviousPage = prevHasData ? new Uri($"{baseUrl}{page.Value - 1}") : null,
                 });
