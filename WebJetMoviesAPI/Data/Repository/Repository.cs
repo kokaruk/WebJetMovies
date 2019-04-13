@@ -68,7 +68,6 @@ namespace WebJetMoviesAPI.Data.Repository
                     return result;
                 });
 
-
             return entity;
         }
 
