@@ -13,6 +13,7 @@ namespace WebJetMoviesAPI.Data.Repository
         public MovieRepository(string endpoint, Lazy<HttpClient> htClient, ILogger<ApiService> logger, IMemoryCache memoryCache) 
             : base(endpoint, htClient, logger, memoryCache)
         {
+            
         }
     }
 }

@@ -17,7 +17,7 @@ namespace WebJetMoviesAPI.Data.Repository
         private readonly string _endPointUrl;
         private readonly Lazy<HttpClient> _htClient;
         private readonly ILogger<ApiService> _logger;
-        private IMemoryCache _cache;
+        private readonly IMemoryCache _cache;
 
         protected Repository(string endPointUrl,
             Lazy<HttpClient> htClient,

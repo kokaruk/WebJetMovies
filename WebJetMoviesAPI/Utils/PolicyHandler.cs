@@ -24,16 +24,16 @@ namespace WebJetMoviesAPI.Utils
                     retryAttempt =>
                     {
                         _logger.LogWarning($"Retry count {retryAttempt}");
-                        return TimeSpan.FromSeconds(1);
+                        return TimeSpan.FromSeconds(3);
                     });
-        public static IAsyncPolicy<HttpResponseMessage> GetTimeOutPolicy(int seconds = 1) =>
+        public static IAsyncPolicy<HttpResponseMessage> GetTimeOutPolicy(int seconds = 3) =>
             Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(seconds));
 
         public static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy()
         {
             return HttpPolicyExtensions
                 .HandleTransientHttpError()
-                .CircuitBreakerAsync(5, TimeSpan.FromSeconds(1));
+                .CircuitBreakerAsync(5, TimeSpan.FromSeconds(3));
         }
     }
 }

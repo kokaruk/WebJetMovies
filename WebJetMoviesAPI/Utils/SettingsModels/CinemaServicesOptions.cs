@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
-namespace WebJetMoviesAPI.Utils
+namespace WebJetMoviesAPI.Utils.SettingsModels
 {
-    public class CinemaServices
+    public class CinemaServicesOptions
     {
         public List<string> Names { get; set; } 
     }

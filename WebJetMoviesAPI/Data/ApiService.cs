@@ -8,6 +8,7 @@ using WebJetMoviesAPI.Core;
 using WebJetMoviesAPI.Core.Repository;
 using WebJetMoviesAPI.Data.Repository;
 using WebJetMoviesAPI.Utils;
+using WebJetMoviesAPI.Utils.SettingsModels;
 
 namespace WebJetMoviesAPI.Data
 {
@@ -17,7 +18,7 @@ namespace WebJetMoviesAPI.Data
 
         public ApiService(HttpClient httpClient,
             ILogger<ApiService> logger,
-            IOptions<CinemaServices> genericSettings,
+            IOptions<CinemaServicesOptions> genericSettings,
             IMemoryCache memoryCache)
         {
             var lazyHttpClient = new Lazy<HttpClient>(() => httpClient);
