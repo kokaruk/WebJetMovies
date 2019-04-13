@@ -1,0 +1,9 @@
+version: '3.4'
+
+services:
+  wdtapilogin:
+    image: ${DOCKER_REGISTRY-}webjetmoviesapi
+    build:
+      context: .
+      dockerfile: WebJetMoviesAPI/Dockerfile
+
