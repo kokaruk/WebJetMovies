@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
-using TMDbLib.Objects.Lists;
 using WebJetMoviesAPI.Core;
 using WebJetMoviesAPI.Data.Repository;
 using WebJetMoviesAPI.Models;
@@ -17,7 +16,7 @@ using WebJetMoviesAPI.Utils.SettingsModels;
 namespace WebJetMoviesAPI.Controllers
 {
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     [ResponseCache(VaryByHeader = "User-Agent", Duration = 30)]
     public class MoviesController : ControllerBase
@@ -42,8 +41,8 @@ namespace WebJetMoviesAPI.Controllers
         /// Gets full list of movies or paginates if provided page number
         /// </summary>
         [HttpGet]
-        [HttpGet("{page}")]
-        public async Task<ActionResult<PageCollectionResponse<CheapestMovieResponse<Movie>>>> GetAll(int? page)
+        [HttpGet("{page?}")]
+        public async Task<ActionResult<PageCollectionResponse<CheapestMovieResponse<Movie>>>> GetAll( int? page)
         {
             var allRequests = _apiService.MovieServices.Values.ToList().Select(i => i.GetAllAsync(CollectionEndpoint));
             var result = await Task.WhenAll(allRequests);
@@ -65,6 +64,7 @@ namespace WebJetMoviesAPI.Controllers
                 var pageListingMovies = distinctMovies
                     .Skip((page.Value - 1) * _paginationSettings.Value.ItemsLimit)
                     .Take(_paginationSettings.Value.ItemsLimit)
+                    .OrderBy(m => m.Year)
                     .ToList();
 
                 var baseUrl = Regex.Replace(Url.Action("GetAll"), @"\d*$", string.Empty);
@@ -157,7 +157,7 @@ namespace WebJetMoviesAPI.Controllers
         #region update posters for movies
 
         /// <summary>
-        /// Update movies poster url from movies database 
+        /// Update movies poster url from movies database
         /// </summary>
         private async Task<IEnumerable<Movie>> FixPosterAddresses(List<Movie> movies)
         {

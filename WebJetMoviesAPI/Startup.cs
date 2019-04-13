@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -55,6 +57,15 @@ namespace WebJetMoviesAPI
                 options.KnownProxies.Add(IPAddress.Parse("192.168.1.75"));
             });
 
+            // Register the Swagger services
+            services.AddSwaggerDocument(document =>
+            {
+                document.PostProcess = d =>
+                {
+                    d.Info.Title = "WEBJET ASR";
+                };
+            });
+
             // response caching middleware
             services.AddResponseCaching();
 
@@ -87,6 +98,8 @@ namespace WebJetMoviesAPI
                 .AddPolicyHandler(GetRetryPolicy(3))
                 .AddPolicyHandler(GetCircuitBreakerPolicy(3))
                 .AddPolicyHandler(GetTimeOutPolicy(3));
+
+            services.AddHealthChecks();
         }
 
 
@@ -95,11 +108,36 @@ namespace WebJetMoviesAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger(config =>
+                {
+                    config.Path = "/swagger/v1/swagger.json";
+                    config.PostProcess = (document, request) =>
+                    {
+                        if (request.Headers.ContainsKey("X-External-Host"))
+                        {
+                            // Change document server settings to public
+                            document.Host = request.Headers["X-External-Host"].First();
+                            document.BasePath = request.Headers["X-External-Path"].First();
+                        }
+                    };
+                });
+                app.UseSwaggerUi3();
             }
             else
             {
+                app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
+
+            app.UseHealthChecks("/health", new HealthCheckOptions()
+            {
+                // The following StatusCodes are the default assignments for
+                // the HealthStatus properties.
+                ResultStatusCodes =
+                {
+                    [HealthStatus.Healthy] = StatusCodes.Status200OK
+                }
+            });
 
             // Shows UseCors with CorsPolicyBuilder.
             app.UseCors(builder =>
@@ -108,7 +146,10 @@ namespace WebJetMoviesAPI
                     .AllowAnyHeader()
                     .AllowAnyOrigin());
 
-            app.UseHttpsRedirection();
+
+//          proxy should handle https
+//          app.UseHttpsRedirection();
+
             app.UseMvc();
 
             app.Use(async (context, next) =>

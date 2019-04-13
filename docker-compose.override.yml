@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  wdtapilogin:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=8001
+      - TZ="Australia/Melbourne"
+    ports:
+      - "8000:80"
+      - "8001:443"

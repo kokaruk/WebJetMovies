@@ -4,16 +4,36 @@
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
         <UserSecretsId>6691e2bb-1d0c-43e6-8883-011f9199cfea</UserSecretsId>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.App" />
         <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
         <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.2.0" />
+        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="2.2.0" />
         <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="2.2.0" />
+        <PackageReference Include="NSwag.AspNetCore" Version="12.1.0" />
         <PackageReference Include="Polly" Version="7.1.0" />
         <PackageReference Include="Polly.Caching.Memory" Version="3.0.1" />
-        <PackageReference Include="TMDbLib.Core2" Version="1.0.0" />
     </ItemGroup>
+
+    <ItemGroup>
+        <Content Update="appsettings.Development.json">
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+        <Content Update="appsettings.json">
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+        <Content Update="appsettings.Production.json">
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="appsettings.Production.json" CopyToPublishDirectory="Always" />
+    </ItemGroup>
+        
 
 </Project>
