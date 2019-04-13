@@ -17,10 +17,10 @@ namespace WebJetMoviesAPI.Models
         public string Awards { get; set; }
         public string Poster { get; set; }
         public string Metascore { get; set; }
-        public double Rating { get; set; }
-        public int Votes { get; set; }
+        public double? Rating { get; set; }
+        public string Votes { get; set; }
         public string Id { get; set; }
-        public double Price { get; set; }
+        public double? Price { get; set; }
         public string Type { get; set; }
     }
 }
