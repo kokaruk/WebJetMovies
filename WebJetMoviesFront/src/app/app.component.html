@@ -1,0 +1,27 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<header>
+  <div class="container wrap header clearfloat">
+    <a [routerLink]="['/']">
+      <img src="../assets/img/logo-web-jet.svg" height="122" alt="Silverado Cinema"/>
+    </a>
+
+  </div>
+</header>
+<nav>
+
+</nav>
+
+<main id="wrap">
+  <div id="page" class="masthead clearfloat">
+    <div id="maincont" class="container">
+      <div class="full-width left">
+        <div class="content full-page clearfloat shadow">
+          <router-outlet></router-outlet>
+          <noscript>Please enable JavaScript to continue using this application.</noscript>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<app-footer></app-footer>

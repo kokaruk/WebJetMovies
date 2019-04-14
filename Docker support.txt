@@ -1,5 +1,11 @@
 1. make container from image
-docker run -d --name webjet_api -p 8000:80 -p 8001:443 -e TZ=Australia/Melbourne -e ASPNETCORE_URLS="https://+;http://+" -e ASPNETCORE_HTTPS_PORT=8001 -e ASPNETCORE_Kestrel__Certificates__Default__Password="crypticpassword" -e ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx -v ${HOME}/.aspnet/https:/https/ webjetmoviesapi
+docker run -d --name webjet_api -p 7000:80 -p 7001:443 -e TZ=Australia/Melbourne -e ASPNETCORE_URLS="https://+;http://+" -e ASPNETCORE_HTTPS_PORT=7001 -e ASPNETCORE_Kestrel__Certificates__Default__Password="crypticpassword" -e ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx -v ${HOME}/.aspnet/https:/https/ webjetmoviesapi
 
 2. make persistent 
 docker update --restart=always webjet_api
+
+
+3. front end
+docker build -t wj-angular-client:dev .
+docker run -d --name wj-angular -p 5555:4444 wj-angular-client:dev
+docker update --restart=always wj-angular

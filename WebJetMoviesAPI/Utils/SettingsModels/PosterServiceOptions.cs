@@ -1,3 +1,4 @@
+// ReSharper disable InconsistentNaming
 namespace WebJetMoviesAPI.Utils.SettingsModels
 {
     public class PosterServiceOptions

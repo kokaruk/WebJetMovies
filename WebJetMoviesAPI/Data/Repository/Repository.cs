@@ -5,19 +5,20 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
-using Polly;
-using Polly.Retry;
-using Polly.Timeout;
 using WebJetMoviesAPI.Core.Repository;
 
 namespace WebJetMoviesAPI.Data.Repository
 {
+    /// <summary>
+    ///     generic repository
+    /// </summary>
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
+        private const int CacheLifeTime = 10;
+        private readonly IMemoryCache _cache;
         private readonly string _endPointUrl;
         private readonly Lazy<HttpClient> _htClient;
         private readonly ILogger<ApiService> _logger;
-        private readonly IMemoryCache _cache;
 
         protected Repository(string endPointUrl,
             Lazy<HttpClient> htClient,
@@ -33,9 +34,9 @@ namespace WebJetMoviesAPI.Data.Repository
         public async Task<IEnumerable<TEntity>> GetAllAsync(string methodUrl)
         {
             var allEntries = await
-                _cache.GetOrCreateAsync(_endPointUrl, async (entry) =>
+                _cache.GetOrCreateAsync(_endPointUrl, async entry =>
                 {
-                    entry.SlidingExpiration = TimeSpan.FromMinutes(10);
+                    entry.SlidingExpiration = TimeSpan.FromMinutes(CacheLifeTime);
                     var requestUri = $"{_endPointUrl}/{methodUrl}/";
 
                     var response = await _htClient.Value.GetAsync(requestUri);
@@ -55,9 +56,9 @@ namespace WebJetMoviesAPI.Data.Repository
         public async Task<TEntity> GetAsync(string methodUrl, string id)
         {
             var entity = await
-                _cache.GetOrCreateAsync(id, async (entry) =>
+                _cache.GetOrCreateAsync(id, async entry =>
                 {
-                    entry.SlidingExpiration = TimeSpan.FromMinutes(10);
+                    entry.SlidingExpiration = TimeSpan.FromMinutes(CacheLifeTime);
                     var requestUri = $"{_endPointUrl}/{methodUrl}/{id}";
                     var response = await _htClient.Value.GetAsync(requestUri);
                     response.EnsureSuccessStatusCode();

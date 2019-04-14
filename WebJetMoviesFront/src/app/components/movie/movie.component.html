@@ -1,0 +1,30 @@
+<div class="container" style="min-height: 300px">
+
+  <div *ngIf="movieResponse == null">
+  <div class="d-flex justify-content-center align-middle" style="padding-top: 5rem">
+    <div class=" spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+  </div>
+
+  <div *ngIf="movieResponse !=null">
+    <h5>{{movieResponse.member.title}}</h5>
+
+    <div class="movie">
+      <div class="movie-inner">
+        <div class="movie-item">
+          <img src="{{movieResponse.member.poster}}" alt=""/>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div style="text-transform: capitalize"><strong>Vendor:</strong> {{movieResponse.parentName}}</div>
+      <div><strong>Price:</strong> {{movieResponse.member.price}}</div>
+      <div><strong>Actors:</strong> {{movieResponse.member.actors}}</div>
+      <div><strong>Plot:</strong> {{movieResponse.member.plot}}</div>
+    </div>
+  </div>
+
+</div>
+

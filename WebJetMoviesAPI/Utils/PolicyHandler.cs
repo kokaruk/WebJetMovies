@@ -1,33 +1,38 @@
 using System;
+using System.Net;
 using System.Net.Http;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Polly;
-using Polly.Caching;
-using Polly.Caching.Memory;
 using Polly.Extensions.Http;
-using Polly.Timeout;  
-
+using Polly.Timeout;
 
 namespace WebJetMoviesAPI.Utils
 {
+    /// <summary>
+    ///     Handling policies for Polly / HttpClient 
+    /// </summary>
     public static class PolicyHandler
     {
-        private static ILogger _logger = StaticLogger.CreateLogger("PolicyHandler");
-            
-        public static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(int seconds = 1) =>
-            HttpPolicyExtensions
+        private static readonly ILogger _logger = StaticLogger.CreateLogger("PolicyHandler");
+
+        public static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(int seconds = 1)
+        {
+            return HttpPolicyExtensions
                 .HandleTransientHttpError()
-                .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
+                .OrResult(msg => msg.StatusCode == HttpStatusCode.NotFound)
                 .Or<TimeoutRejectedException>()
                 .WaitAndRetryAsync(11,
                     retryAttempt =>
                     {
                         _logger.LogWarning($"Retry count {retryAttempt}");
-                        return TimeSpan.FromSeconds(2);
+                        return TimeSpan.FromSeconds(seconds);
                     });
-        public static IAsyncPolicy<HttpResponseMessage> GetTimeOutPolicy(int seconds = 1) =>
-            Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(seconds));
+        }
+
+        public static IAsyncPolicy<HttpResponseMessage> GetTimeOutPolicy(int seconds = 1)
+        {
+            return Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(seconds));
+        }
 
         public static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy(int seconds = 1)
         {
