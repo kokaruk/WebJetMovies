@@ -39,4 +39,4 @@ Implementation Assumptions
 API limitation
 -----
 
-Supplied API data returns broken links to images from IMDB, in order to address the issue, other provider ([TMDB](https://www.themoviedb.org)) is being queried to retrieve working URI and then it is being replaced in the output on the fly
+Supplied API data returns broken links to images from IMDB, in order to address the issue, other provider ([TMDB](https://www.themoviedb.org)) is being queried to retrieve working URI and then it is being replaced in the output on the fly.
