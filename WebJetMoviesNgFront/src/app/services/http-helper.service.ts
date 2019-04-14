@@ -6,7 +6,7 @@ import {Observable} from 'rxjs';
   providedIn: 'root'
 })
 export class HttpHelperService {
-  private readonly baseURL = 'https://staging.kokaruk.com/asdasfdasdygiuyg';
+  private readonly baseURL = 'https://staging.kokaruk.com/webjet';
 
   constructor(private http: HttpClient) {
   }

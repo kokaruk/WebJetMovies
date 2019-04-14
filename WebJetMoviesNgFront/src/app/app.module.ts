@@ -12,6 +12,8 @@ import { HttpClientModule } from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { NavToolbarComponent } from './components/nav-toolbar/nav-toolbar.component';
 import { HomeComponent } from './components/home/home.component';
+import { FooterComponent } from './footer/footer.component';
+import { MoviesAllComponent } from './components/movies-all/movies-all.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,9 @@ import { HomeComponent } from './components/home/home.component';
     TimetableComponent,
     PageNotFoundComponent,
     NavToolbarComponent,
-    HomeComponent
+    HomeComponent,
+    FooterComponent,
+    MoviesAllComponent
   ],
   imports: [
     BrowserModule,
