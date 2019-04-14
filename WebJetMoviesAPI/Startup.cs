@@ -64,7 +64,17 @@ namespace WebJetMoviesAPI
                 }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // add CORS support
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("MaxOpen",
+                    builder =>
+                    {
+                        builder
+                            .AllowAnyOrigin()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader();
+                    });
+            });
 
             services.AddHttpClient<IApiService, ApiService>(
                     c =>
@@ -92,7 +102,7 @@ namespace WebJetMoviesAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                
+
                 // add swagger ui for development
                 app.UseSwagger(config =>
                 {
@@ -125,19 +135,6 @@ namespace WebJetMoviesAPI
                 }
             });
 
-            // Shows UseCors with CorsPolicyBuilder.
-            app.UseCors(builder =>
-                builder
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowAnyOrigin());
-
-
-//          proxy should handle https
-//          app.UseHttpsRedirection();
-
-            app.UseMvc();
-
             app.Use(async (context, next) =>
             {
                 // response caching config
@@ -154,6 +151,14 @@ namespace WebJetMoviesAPI
             });
 
             app.UseResponseCaching();
+
+            app.UseCors("MaxOpen");
+
+
+//          proxy should handle https
+//          app.UseHttpsRedirection();
+
+            app.UseMvc();
         }
     }
 }

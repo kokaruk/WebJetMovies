@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using WebJetMoviesAPI.Core;
@@ -12,6 +13,7 @@ using WebJetMoviesAPI.Utils.SettingsModels;
 
 namespace WebJetMoviesAPI.Controllers
 {
+    [EnableCors("MaxOpen")]
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
@@ -78,7 +80,7 @@ namespace WebJetMoviesAPI.Controllers
                                   .Take(_paginationSettings.Value.ItemsLimit)
                                   .Any();
 
-            // leave this here if decide to have pull prices on initial display  
+            // leave this here if decide to have pull prices on initial display
             /*
             var maxItems = new List<CheapestMovieResponse<Movie>>();
             pageListingMovies.ForEach( mv =>

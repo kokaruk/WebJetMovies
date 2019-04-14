@@ -24,11 +24,10 @@
               "src/manifest.json"
             ],
             "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css",
               "src/assets/css/normalize.css",
-              "src/assets/css/skeleton.css",
-              "src/assets/css/responsive.css"
-
+              "src/assets/css/skeleton.css"
             ],
             "scripts": [],
             "es5BrowserSupport": true
@@ -65,7 +64,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "WebJetMoviesFront:build"
+            "browserTarget": "WebJetMoviesFront:build",
+            "port": 4444
           },
           "configurations": {
             "production": {

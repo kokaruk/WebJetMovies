@@ -8,5 +8,5 @@ services:
       - ASPNETCORE_HTTPS_PORT=8001
       - TZ="Australia/Melbourne"
     ports:
-      - "8000:80"
-      - "8001:443"
+      - "7000:80"
+      - "7001:443"

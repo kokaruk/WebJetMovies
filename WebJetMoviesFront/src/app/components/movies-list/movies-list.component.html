@@ -1,0 +1,45 @@
+<div class="full-width content-row">
+  <div class="nowshowing">
+
+    <h2>now showing</h2>
+    <div *ngIf="productsObservable">
+      <div class="container">
+        <div *ngFor="let movie of productsObservable.items">
+          <div class="movie">
+            <a [routerLink]="['../movie', movie.year, movie.title]">
+              <div class="movie-inner">
+                <div class="movie-item">
+                  <img src="{{movie.poster}}" alt=""/>
+                </div>
+                <div class="movie-info">
+                  <img class="img-blur" src="{{movie.poster}}" alt=""/>
+                  <div class="movie-info-inner">
+                    <div class="movie-info-inner-title">
+                      <h3>{{movie.title}}</h3>
+                      <p>{{movie.year}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <ul class="pagination justify-content-center">
+          <li [ngClass]="{disabled:productsObservable.previousPage == null}" class="page-item">
+            <a class="page-link" (click)="setPage(productsObservable.previousPage)">Previous</a>
+          </li>
+          <li [ngClass]="{disabled:productsObservable.nextPage == null}" class="page-item">
+            <a class="page-link" (click)="setPage(productsObservable.nextPage)">Next</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+

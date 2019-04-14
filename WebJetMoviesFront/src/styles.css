@@ -1,8 +1,8 @@
 @charset "UTF-8";
+/* THIS IS MY OWN RE-WRITES AND OVERRIDES FROM MANY YEARS. VERY MESSY. NOT PRODUCTION AT ALL */
+
 /* You can add global styles to this file, and also import other style files */
-@import "assets/css/normalize.css";
 /* skeleton framework normalise css*/
-@import "assets/css/skeleton.css";
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web:200,200i,300,300i,400,400i,600,600i,700,700i,900');
 
 
@@ -200,7 +200,6 @@ img#floorplan {
 }
 
 .full-width li:before {
-  content: "•";
   font-size: larger;
   color: var(--orange);
   padding-right: 0.3rem;
@@ -415,13 +414,7 @@ img#floorplan {
 }
 
 .movie {
-  position: relative;
-  min-height: 1px;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  width: 25%;
+  padding-right: 2rem;
   box-sizing: border-box;
   float: left;
 }
@@ -643,5 +636,9 @@ p#total {
 /* confirm form*/
 #formConfirm {
   width: 80%;
+}
+
+.button-primary{
+  margin-right: 1rem;
 }
 
