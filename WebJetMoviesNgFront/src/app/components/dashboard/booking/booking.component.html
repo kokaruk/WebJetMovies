@@ -1,0 +1,53 @@
+<h3>Bookings</h3>
+<mat-slide-toggle (click)="toggleStaff()">
+  {{staffToggle ? 'Staff' : 'Student'}}
+</mat-slide-toggle>
+<div *ngIf="staffToggle">
+  <mat-form-field>
+    <mat-select placeholder="Staff" (selectionChange)="selectUser($event)">
+      <mat-option *ngFor="let user of staff" [value]="user.userID">
+        {{user.name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div *ngIf="!staffToggle">
+  <mat-form-field>
+    <mat-select placeholder="Student" (selectionChange)="selectUser($event)">
+      <mat-option *ngFor="let student of students" [value]="student.userID">
+        {{student.name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div *ngIf="displaySlots">
+  <div *ngFor="let slot of displaySlots">
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-card>Room: {{slot.roomID}}</mat-card>
+            <mat-card>Staff: {{slot.staff.name}}</mat-card>
+            <mat-card *ngIf="slot.student">Student: {{ slot.student.name  }} </mat-card>
+          </mat-panel-title>
+          <mat-panel-description class="pt-3">
+            Date {{slot.startTime | date: 'dd/MM/yyyy h:mm a'}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-form-field>
+          <mat-select placeholder="Student"
+                      [(ngModel)]="slot.studentID"
+                      (selectionChange)="onStudentChange(slot)">
+            <!--[(value)]="submitted">-->
+            <mat-option value="">&nbsp;</mat-option>
+            <mat-option *ngFor="let student of students" [value]="student.userID">
+              {{student.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-button (click)="editSlot(slot)">Save</button>
+        <button [disabled]="slot.studentID" mat-button (click)="deleteSlot(slot)">Delete Slot</button>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+</div>

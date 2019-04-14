@@ -1,0 +1,13 @@
+<mat-toolbar color="primary">
+
+  <button mat-button routerLink="/">
+    <mat-icon>home</mat-icon>
+    {{title}}</button>
+
+  <!-- This fills the remaining space of the current row -->
+  <span class="fill-remaining-space"></span>
+  <div fxLayout="row" fxShow="false" fxShow.gt-sm>
+    <button mat-button routerLink="/dashboard/booking" routerLinkActive="active">Bookings</button>
+    <button mat-button routerLink="/dashboard/room" routerLinkActive="active">Rooms</button>
+  </div>
+</mat-toolbar>

@@ -1,0 +1,48 @@
+<div *ngFor="let room of rooms">
+  <div>{{room.roomID}}</div>
+  <div *ngIf="room.slots">
+    <div *ngFor="let slot of room.slots">
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-card>Room: {{slot.roomID}}</mat-card>
+              <mat-card>Staff: {{slot.staff.name}}</mat-card>
+              <mat-card *ngIf="slot.student">Student: {{ slot.student.name  }} </mat-card>
+            </mat-panel-title>
+            <mat-panel-description class="pt-3">
+              Date {{slot.startTime | date: 'dd/MM/yyyy h:mm a'}}
+              <!--<mat-form-field class="example-full-width">-->
+                <!--<input matInput [matDatepicker]="picker" placeholder="Choose a date">-->
+                <!--<mat-datepicker-toggle matSuffix [for]="picker">-->
+                  <!--<mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>-->
+                <!--</mat-datepicker-toggle>-->
+                <!--<mat-datepicker #picker></mat-datepicker>-->
+              <!--</mat-form-field>-->
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <mat-form-field>
+            <mat-select placeholder="Student"
+                        [(ngModel)]="slot.studentID"
+              (selectionChange)="onStudentChange(slot)">
+              <!--[(value)]="submitted">-->
+              <mat-option value="">&nbsp;</mat-option>
+              <mat-option *ngFor="let student of students" [value]="student.userID">
+                {{student.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button mat-button (click)="editSlot(slot)">Save</button>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+  <button mat-button (click)="deleteRoom(room)">Delete Room</button>
+</div>
+<mat-form-field class="example-form-field">
+  <input matInput type="text" placeholder="New Room Name" [(ngModel)]="roomID" maxlength="2">
+  <button mat-button *ngIf="roomID" matSuffix mat-icon-button aria-label="Clear" (click)="roomID=''">
+    <mat-icon>X</mat-icon>
+  </button>
+</mat-form-field>
+<button mat-button [disabled]="!roomID" (click)="addRoom(roomID)">Add Room</button>
