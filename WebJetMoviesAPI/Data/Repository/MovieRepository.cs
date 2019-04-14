@@ -7,6 +7,9 @@ using WebJetMoviesAPI.Models;
 
 namespace WebJetMoviesAPI.Data.Repository
 {
+    /// <summary>
+    ///     concrete implementation of repository
+    /// </summary>
     public class MovieRepository : Repository<Movie>, IMovieRepository
     {
         public MovieRepository(string endpoint, Lazy<HttpClient> htClient, ILogger<ApiService> logger,

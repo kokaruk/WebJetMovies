@@ -92,6 +92,8 @@ namespace WebJetMoviesAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                
+                // add swagger ui for development
                 app.UseSwagger(config =>
                 {
                     config.Path = "/swagger/v1/swagger.json";

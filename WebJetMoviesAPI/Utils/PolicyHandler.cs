@@ -8,6 +8,9 @@ using Polly.Timeout;
 
 namespace WebJetMoviesAPI.Utils
 {
+    /// <summary>
+    ///     Handling policies for Polly / HttpClient 
+    /// </summary>
     public static class PolicyHandler
     {
         private static readonly ILogger _logger = StaticLogger.CreateLogger("PolicyHandler");
@@ -22,7 +25,7 @@ namespace WebJetMoviesAPI.Utils
                     retryAttempt =>
                     {
                         _logger.LogWarning($"Retry count {retryAttempt}");
-                        return TimeSpan.FromSeconds(2);
+                        return TimeSpan.FromSeconds(seconds);
                     });
         }
 

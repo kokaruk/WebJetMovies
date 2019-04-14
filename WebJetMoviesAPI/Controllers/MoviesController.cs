@@ -39,7 +39,7 @@ namespace WebJetMoviesAPI.Controllers
         /// </summary>
         [HttpGet]
         [HttpGet("{page?}")]
-        public async Task<ActionResult<PageCollectionResponse<CheapestMovieResponse<Movie>>>> GetAll(int? page)
+        public async Task<ActionResult<PageCollectionResponse<TupleWrapperResponse<Movie>>>> GetAll(int? page)
         {
             var allRequests = _apiService.MovieServices.Values.ToList().Select(i => i.GetAllAsync(CollectionEndpoint));
             var result = await Task.WhenAll(allRequests);
@@ -78,7 +78,7 @@ namespace WebJetMoviesAPI.Controllers
                                   .Take(_paginationSettings.Value.ItemsLimit)
                                   .Any();
 
-            // leave this here if decide to have pull prices on initial show  
+            // leave this here if decide to have pull prices on initial display  
             /*
             var maxItems = new List<CheapestMovieResponse<Movie>>();
             pageListingMovies.ForEach( mv =>
@@ -100,7 +100,7 @@ namespace WebJetMoviesAPI.Controllers
         ///     get single movie based on title and year
         /// </summary>
         [HttpGet("{year}/{title}")]
-        public async Task<ActionResult<CheapestMovieResponse<Movie>>> Get(string year, string title)
+        public async Task<ActionResult<TupleWrapperResponse<Movie>>> Get(string year, string title)
         {
             if (string.IsNullOrWhiteSpace(year) || string.IsNullOrWhiteSpace(title))
                 BadRequest();
@@ -111,7 +111,7 @@ namespace WebJetMoviesAPI.Controllers
         }
 
 
-        private async Task<CheapestMovieResponse<Movie>> GetCheapestMovie(string year, string title)
+        private async Task<TupleWrapperResponse<Movie>> GetCheapestMovie(string year, string title)
         {
             var moviesCollections = new Dictionary<string, Task<Movie>>();
 
@@ -133,7 +133,7 @@ namespace WebJetMoviesAPI.Controllers
                 .FirstOrDefault(x => x.Value.Price.Equals(requiredMovies.Values.Min(m => m.Price)));
             movie.Poster = await FixPosterAddress(movie);
 
-            return new CheapestMovieResponse<Movie> {ParentName = parent, Member = movie};
+            return new TupleWrapperResponse<Movie> {ParentName = parent, Member = movie};
         }
 
         /// <summary>

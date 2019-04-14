@@ -9,6 +9,9 @@ using WebJetMoviesAPI.Core.Repository;
 
 namespace WebJetMoviesAPI.Data.Repository
 {
+    /// <summary>
+    ///     generic repository
+    /// </summary>
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         private const int CacheLifeTime = 10;

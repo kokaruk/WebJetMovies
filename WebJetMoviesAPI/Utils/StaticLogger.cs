@@ -1,9 +1,10 @@
 using Microsoft.Extensions.Logging;
+// ReSharper disable ClassNeverInstantiated.Global
 
 namespace WebJetMoviesAPI.Utils
 {
     /// <summary>
-    ///     Shared logger
+    ///     Shared static logger factory, to be accessed through 
     /// </summary>
     public class StaticLogger
     {

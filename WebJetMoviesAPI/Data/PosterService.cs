@@ -10,9 +10,14 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using WebJetMoviesAPI.Core;
 using WebJetMoviesAPI.Utils.SettingsModels;
+// ReSharper disable ClassNeverInstantiated.Global
 
 namespace WebJetMoviesAPI.Data
 {
+    /// <summary>
+    ///     separate service for poster retrieval
+    ///     very simple design, in real world one would expect to receive correct URI from API supplier
+    /// </summary>
     public class PosterService : IPosterService
     {
         private const int CacheLifeTime = 180;

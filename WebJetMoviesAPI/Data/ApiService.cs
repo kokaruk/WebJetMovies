@@ -8,9 +8,13 @@ using WebJetMoviesAPI.Core;
 using WebJetMoviesAPI.Core.Repository;
 using WebJetMoviesAPI.Data.Repository;
 using WebJetMoviesAPI.Utils.SettingsModels;
+// ReSharper disable ClassNeverInstantiated.Global
 
 namespace WebJetMoviesAPI.Data
 {
+    /// <summary>
+    ///     API service based on repository pattern
+    /// </summary>
     public class ApiService : IApiService
     {
         public ApiService(HttpClient httpClient,

@@ -1,5 +1,8 @@
 namespace WebJetMoviesAPI.Utils
 {
+    /// <summary>
+    ///     cache keys storage-wrapper
+    /// </summary>
     public static class CacheKeys
     {
         public static string Entry => "_Entry";
