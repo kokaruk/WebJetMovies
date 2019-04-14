@@ -4,6 +4,6 @@ namespace WebJetMoviesAPI.Utils.SettingsModels
 {
     public class CinemaServicesOptions
     {
-        public List<string> Names { get; set; } 
+        public List<string> Names { get; set; }
     }
 }

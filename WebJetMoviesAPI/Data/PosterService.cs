@@ -15,10 +15,11 @@ namespace WebJetMoviesAPI.Data
 {
     public class PosterService : IPosterService
     {
-        private readonly ILogger<PosterService> _logger;
-        private readonly IOptions<PosterServiceOptions> _posterServiceSettings;
+        private const int CacheLifeTime = 180;
         private readonly IMemoryCache _cache;
         private readonly Lazy<HttpClient> _htClient;
+        private readonly ILogger<PosterService> _logger;
+        private readonly IOptions<PosterServiceOptions> _posterServiceSettings;
 
         public PosterService(HttpClient httpClient,
             ILogger<PosterService> logger,
@@ -36,9 +37,9 @@ namespace WebJetMoviesAPI.Data
             var id = movieTitle + year;
 
             var entity = await
-                _cache.GetOrCreateAsync(id, async (entry) =>
+                _cache.GetOrCreateAsync(id, async entry =>
                 {
-                    entry.SlidingExpiration = TimeSpan.FromMinutes(180);
+                    entry.SlidingExpiration = TimeSpan.FromMinutes(CacheLifeTime);
                     var builder = new UriBuilder("https://api.themoviedb.org/3/search/movie") {Port = -1};
                     var query = HttpUtility.ParseQueryString(builder.Query);
                     query["api_key"] = _posterServiceSettings.Value.ApiKey;

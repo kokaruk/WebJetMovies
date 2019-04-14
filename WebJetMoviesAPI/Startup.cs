@@ -1,28 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
-using Polly;
-using Polly.Caching;
-using Polly.Caching.Memory;
-using Polly.Extensions.Http;
-using Polly.Registry;
-using Polly.Timeout;
 using WebJetMoviesAPI.Core;
 using WebJetMoviesAPI.Data;
 using WebJetMoviesAPI.Utils;
@@ -36,7 +26,7 @@ namespace WebJetMoviesAPI
         public Startup(IConfiguration configuration, ILoggerFactory logFactory)
         {
             Configuration = configuration;
-            Utils.StaticLogger.LoggerFactory = logFactory;
+            StaticLogger.LoggerFactory = logFactory;
         }
 
         public IConfiguration Configuration { get; }
@@ -58,13 +48,7 @@ namespace WebJetMoviesAPI
             });
 
             // Register the Swagger services
-            services.AddSwaggerDocument(document =>
-            {
-                document.PostProcess = d =>
-                {
-                    d.Info.Title = "WEBJET ASR";
-                };
-            });
+            services.AddSwaggerDocument(document => { document.PostProcess = d => { d.Info.Title = "WEBJET ASR"; }; });
 
             // response caching middleware
             services.AddResponseCaching();
@@ -129,7 +113,7 @@ namespace WebJetMoviesAPI
                 app.UseHsts();
             }
 
-            app.UseHealthChecks("/health", new HealthCheckOptions()
+            app.UseHealthChecks("/health", new HealthCheckOptions
             {
                 // The following StatusCodes are the default assignments for
                 // the HealthStatus properties.
@@ -156,13 +140,13 @@ namespace WebJetMoviesAPI
             {
                 // response caching config
                 context.Response.GetTypedHeaders().CacheControl =
-                    new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
+                    new CacheControlHeaderValue
                     {
                         Public = true,
                         MaxAge = TimeSpan.FromMinutes(1)
                     };
-                context.Response.Headers[Microsoft.Net.Http.Headers.HeaderNames.Vary] =
-                    new string[] {"Accept-Encoding"};
+                context.Response.Headers[HeaderNames.Vary] =
+                    new[] {"Accept-Encoding"};
 
                 await next();
             });
