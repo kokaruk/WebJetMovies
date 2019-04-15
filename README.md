@@ -38,7 +38,6 @@ Implementation Assumptions
 5. Backend API are made public, in the future JWT may be introduced for security
 
 #### demo at <a href="https://staging.kokaruk.com" target="_blank">my staging rig</a>
-[adjustable](http://google.com "Giiidd"){:target="_blank"}
 
 API limitation
 -----
