@@ -37,7 +37,7 @@ Implementation Assumptions
 4. Information about a movie doesn\'t require displaying all supplied information (\'**cinemaworld**\' schema has an extra attribute `awards`, I'm skipping it). 
 5. Backend API are made public, in the future JWT may be introduced for security
 
-#### demo at [my staging rig](https://staging.kokaruk.com)
+#### demo at <a href="https://staging.kokaruk.com" target="_blank">my staging rig</a>
 
 API limitation
 -----
