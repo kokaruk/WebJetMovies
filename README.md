@@ -35,6 +35,9 @@ Implementation Assumptions
 2. Data for prices and movies doesn\'t change very often. It is possible to in-memory cache responses (up to 10 minutes for supplied api) and up to 180 minutes for images URI retrieved from the img_db database API (see below discovered API limitations)
 3. Main all movies listing doesn\'t require displaying lowers price. Only when more info requested. 
 4. Information about a movie doesn\'t require displaying all supplied information (\'**cinemaworld**\' schema has an extra attribute `awards`, I'm skipping it). 
+5. Backend API are made public, in the future JWT may be introduced for security
+
+#### demo at [my staging rig](https://staging.kokaruk.com)
 
 API limitation
 -----
