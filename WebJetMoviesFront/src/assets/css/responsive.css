@@ -1,0 +1,140 @@
+/* # All large screens
+================================================== */
+
+@media only screen
+and (min-width: 978px),
+only screen
+and (min-device-width : 978px)
+and (-webkit-min-device-pixel-ratio: 2),
+only screen
+and (min-device-width : 978px)
+and (min-device-pixel-ratio: 2)
+{
+    body {
+        /* farken safari!!!!  relative url doesn't work in shorthand version in safari */
+        background-image: url('../img/popcorn.png');
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        background-position:  right calc(10%) top 190px;
+        background-size: auto;
+        background-blend-mode: overlay;
+    }
+}
+
+
+
+
+
+/* #Tablet & Mobile
+================================================== */
+@media only screen and (max-device-width: 977px) {
+    body {
+        background-image: none;
+    }
+}
+
+/* #Tablet (Portrait)
+================================================== */
+@media
+only screen and (min-width: 768px) and (max-width: 977px),
+only screen and (min-device-width: 768px) and (max-device-width: 977px) and (-webkit-min-device-pixel-ratio: 2),
+only screen and (min-device-width: 768px) and (max-device-width: 977px) and (min-device-pixel-ratio: 2)
+{
+    :root{font-size: 110%;}
+    .container { max-width: 978px; width: auto; padding: 0 15px }
+    .nowshowing > .left { display: inline-block; float: none; clear: both; width: 100%;}
+    .movie {width: 50%;}
+    input[type="email"], input[type="number"],
+    input[type="search"], input[type="text"],
+    input[type="tel"], input[type="url"],
+    input[type="password"], textarea, select {height: 3rem;}
+    .movie-info-inner-title h3 {font-size: 1.1rem;}
+    .movie-info-inner-title p {font-size: 1.2rem;}
+    button {font-size: 1.1rem; width: 30%;height: 3rem;}
+}
+
+
+/*  #Mobile All
+================================================== */
+@media only screen and (max-width: 767px),
+only screen and (max-device-width: 767px) and (-webkit-min-device-pixel-ratio: 2),
+only screen and (max-device-width: 767px) and (min-device-pixel-ratio: 2)
+{
+    :root{font-size: 120%;}
+    .header {position: absolute; text-align: left; padding: 10px !important;}
+    .header img {padding-top: 0.5rem; height: 70px;}
+    body { line-height: normal;}
+     { width: 100%; padding: 0;}
+    .column-50 {text-align: center;}
+    .column-50, .mast_desc, .container {width: 100%; max-width: 100%; padding: 0;}
+    .foot-col {margin-bottom: 0.5rem;}
+    #floorplan {margin-right: 0;}
+    img#floorplan{min-width: 80%; }
+    #menu{display:none;}
+    #wireframe{display: none;}
+    nav {margin-top: 110px;}
+    #page {padding-top: 0;}
+    .footer{line-height: normal;}
+    .foot-col {margin-bottom: 1.5rem;}
+    button {font-size: 1.5rem; width: 50%;height: 3rem;}
+    #dropmenu
+    {
+        display: block !important; font-size: medium;
+        width: 100%;
+        overflow: hidden;
+        margin-bottom: 10px;
+        background-color: white;
+        background-image: url("../img/hamburger.png");
+        background-position: right 10px top 50%;
+        background-repeat: no-repeat;
+        background-size: 24px;
+    }
+    #dropmenu select {
+        width: calc(100% + 20px);
+        border: 0;
+        margin-bottom: 0;
+        appearance:none;
+        -moz-appearance:none;
+        -webkit-appearance:none;
+        background: transparent;
+        background-image: none;
+    }
+
+    fieldset.left, fieldset.clearfloat { min-width: 95%; width: 100%; }
+    #bookingform input[type="number"], #bookingform select   { width: 100%; }
+    #bookingform div.left {margin-right: 1rem;}
+    .movie, .movie-inner { width: 100%;}
+    .movie a {padding: 0; width: 100%;}
+    img.img-blur {display: none !important;}
+    .movie-item {position: static; top: 0; left: 0; width: 112px;}
+    .movie-item img{height: 180px; width: 100%; margin: 0;}
+    .movie-info{
+        width: calc(100% - 112px);
+        height: 180px;
+        vertical-align: top;
+        border: 0;
+        position: absolute;
+        top: 0;
+        left: 112px;
+    }
+    .movie-detailed { width: 100%; text-align: center;    }
+    input[id^="seats"]{margin-bottom: 0;}
+    span[id$="_span"] { margin-bottom: 1.5rem; padding-left: 11px; display: block; }
+    #cartpage{font-size: 75%;}
+}
+/*  #Mobile (Portrait)
+================================================== */
+@media only screen and (max-width: 479px),
+only screen and (max-device-width: 479px) and (-webkit-min-device-pixel-ratio: 2),
+only screen and (max-device-width: 479px) and (min-device-pixel-ratio: 2)
+{
+
+
+}
+
+/*  #Mobile (Landscape)
+================================================== */
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+
+
+}
