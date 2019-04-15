@@ -41,7 +41,7 @@ namespace WebJetMoviesAPI.Controllers
         /// </summary>
         [HttpGet]
         [HttpGet("{page?}")]
-        public async Task<ActionResult<PageCollectionResponse<TupleWrapperResponse<Movie>>>> GetAll(int? page)
+        public async Task<ActionResult<PageCollectionResponse<TupleWrapperResponse<Movie>>>> GetAll(int? page = null)
         {
             var allRequests = _apiService.MovieServices.Values.ToList().Select(i => i.GetAllAsync(CollectionEndpoint));
             var result = await Task.WhenAll(allRequests);
