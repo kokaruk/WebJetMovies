@@ -104,7 +104,7 @@ namespace WebJetMoviesAPI.Controllers
         [HttpGet("{year}/{title}")]
         public async Task<ActionResult<TupleWrapperResponse<Movie>>> Get(string year, string title)
         {
-            if (string.IsNullOrWhiteSpace(year) || string.IsNullOrWhiteSpace(title))
+            if (string.IsNullOrWhiteSpace(year) || string.IsNullOrWhiteSpace(title) || !int.TryParse(year, out var yearAsInt))
                 BadRequest();
 
             var cheapestMovie = await GetCheapestMovie(year, title);
