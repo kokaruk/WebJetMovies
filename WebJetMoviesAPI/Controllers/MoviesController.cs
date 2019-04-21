@@ -104,9 +104,9 @@ namespace WebJetMoviesAPI.Controllers
         [HttpGet("{year}/{title}")]
         public async Task<ActionResult<TupleWrapperResponse<Movie>>> Get(string year, string title)
         {
-            if (string.IsNullOrWhiteSpace(year) || string.IsNullOrWhiteSpace(title) ||
-                !int.TryParse(year, out var yearAsInt))
-                BadRequest();
+            var yearParseOk = int.TryParse(year, out var yearAsInt);
+            if (!yearParseOk || string.IsNullOrWhiteSpace(year) || string.IsNullOrWhiteSpace(title) || year.Length != 4)
+                return BadRequest();
 
             var cheapestMovie = await GetCheapestMovie(year, title);
 
@@ -121,13 +121,16 @@ namespace WebJetMoviesAPI.Controllers
             _apiService.MovieServices.Keys.ToList().ForEach(key =>
                 moviesCollections.Add(key,
                     _apiService.MovieServices[key]
-                        .FindAsync(CollectionEndpoint, m => m.Year.Equals(year) && m.Title.Equals(title))));
+                        .FindAsync(CollectionEndpoint, 
+                            m => m.Year.Equals(year) && m.Title.Equals(title))));
 
             await Task.WhenAll(moviesCollections.Values);
 
-            var requiredMovies = await UpdateCollections(moviesCollections
+            var moviesCollectionsFiltered = moviesCollections
                 .Where(f => f.Value.Result != null)
-                .ToDictionary(x => x.Key, x => x.Value));
+                .ToDictionary(x => x.Key, x => x.Value);
+            
+            var requiredMovies = await UpdateCollections(moviesCollectionsFiltered);
 
             if (!requiredMovies.Any())
                 return null;
