@@ -26,6 +26,9 @@ namespace TestProject1
         private readonly PaginationOptions _paginationOptionsStub;
         private readonly MoviesController _moviesController;
         private readonly Mock<IMovieRepository> _moqMovieRepository;
+
+        private readonly Dictionary<string, IMovieRepository> _movieRepoDictFake;
+
         private const string CollectionEndPoint = "movies";
         private const string SingleEndpoint = "movie";
 
@@ -34,13 +37,13 @@ namespace TestProject1
         public MoviesControllerTest(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
-            _fakeMovie = new Movie {Id = "M1", Title = "Real Fake Title", Price = 1, Year = "2222"};
+            _fakeMovie = new Movie {Id = "A1", Title = "Real Fake Title", Price = 10, Year = "2222"};
 
 
             _fakeMoviesList = new List<Movie>
             {
                 _fakeMovie,
-                new Movie {Id = "M2", Title = "Real Fake Title Other", Price = 2, Year = "2222"}
+                new Movie {Id = "A2", Title = "Real Fake Title Other", Price = 1, Year = "2222"}
             };
 
             _moqMovieRepository = new Mock<IMovieRepository>();
@@ -48,12 +51,12 @@ namespace TestProject1
                     repo.GetAllAsync(CollectionEndPoint))
                 .ReturnsAsync(_fakeMoviesList);
 
-            var movieRepoDictFake = new Dictionary<string, IMovieRepository>
+            _movieRepoDictFake = new Dictionary<string, IMovieRepository>
                 {{"movieRepKey", _moqMovieRepository.Object}};
 
             var apiServiceMoq = new Mock<IApiService>();
             _paginationOptionsStub = new PaginationOptions();
-            apiServiceMoq.SetupGet(ms => ms.MovieServices).Returns(movieRepoDictFake);
+            apiServiceMoq.SetupGet(ms => ms.MovieServices).Returns(_movieRepoDictFake);
 
             var posterServiceMoq = new Mock<IPosterService>();
             posterServiceMoq.Setup(p => p.GetAsync(_fakeMovie.Title, "2222"))
@@ -151,6 +154,10 @@ namespace TestProject1
         public async void MoviesController_Get_ReturnOkResult()
         {
             // arrange
+            var fakeMovie = new Movie {Id = "B1", Title = "Real Fake Title", Price = 3, Year = "2222"};
+
+            var fakeMoviesList = new List<Movie>{fakeMovie};
+
             _moqMovieRepository.Setup(repo =>
                     repo.FindAsync(CollectionEndPoint, It.IsAny<Func<Movie, bool>>()))
                 .ReturnsAsync(_fakeMovie);
@@ -158,12 +165,32 @@ namespace TestProject1
                     repo.GetAsync(SingleEndpoint, _fakeMovie.Id))
                 .ReturnsAsync(_fakeMovie);
 
+            var moqMovieRepository = new Mock<IMovieRepository>();
+            moqMovieRepository.Setup(repo =>
+                    repo.GetAllAsync(CollectionEndPoint))
+                .ReturnsAsync(fakeMoviesList);
+
+
+            moqMovieRepository.Setup(repo =>
+                    repo.FindAsync(CollectionEndPoint, It.IsAny<Func<Movie, bool>>()))
+                .ReturnsAsync(fakeMovie);
+
+            moqMovieRepository.Setup(repo =>
+                    repo.GetAsync(SingleEndpoint, fakeMovie.Id))
+                .ReturnsAsync(fakeMovie);
+
+            _movieRepoDictFake.Add("movieRepKey2", moqMovieRepository.Object);
+
             // act
             var result = await _moviesController.Get(year: "2222",
                 title: "Real Fake Title");
 
+            var value = (TupleWrapperResponse<Movie>) ((OkObjectResult) result.Result).Value;
+
             // assert
             Assert.IsType<OkObjectResult>(result.Result);
+            Assert.Equal(3, value.Member.Price);
+            Assert.Equal("movieRepKey2",value.ParentName);
         }
 
         [Fact]
