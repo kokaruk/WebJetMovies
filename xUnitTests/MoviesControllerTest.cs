@@ -95,7 +95,6 @@ namespace TestProject1
                 Assert.IsAssignableFrom<PageCollectionResponse<Movie>>(((OkObjectResult) result.Result).Value);
 
             Assert.Equal(2, response.Items.Count());
-
             Assert.Null(response.NextPage);
             Assert.Null(response.PreviousPage);
         }
@@ -119,7 +118,6 @@ namespace TestProject1
 
             Assert.Single(response1.Items);
             Assert.Single(response2.Items);
-
             Assert.Null(response1.PreviousPage);
             Assert.NotNull(response1.NextPage);
             Assert.NotNull(response2.PreviousPage);
@@ -195,7 +193,7 @@ namespace TestProject1
         }
 
         [Fact]
-        public async void MoviesController_Get_ReturnBadRequestForEmptyArguments()
+        public async void MoviesController_Get_ReturnBadRequestForEmptyOrBadArguments()
         {
             // arrange
 
