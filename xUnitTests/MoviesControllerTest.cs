@@ -39,7 +39,6 @@ namespace TestProject1
             _testOutputHelper = testOutputHelper;
             _fakeMovie = new Movie {Id = "A1", Title = "Real Fake Title", Price = 10, Year = "2222"};
 
-
             _fakeMoviesList = new List<Movie>
             {
                 _fakeMovie,
@@ -150,13 +149,15 @@ namespace TestProject1
             Assert.IsType<NoContentResult>(result.Result);
         }
 
-        [Fact]
-        public async void MoviesController_Get_ReturnOkResult()
+        [Theory]
+        [InlineData(3, 3, "movieRepKey2")]
+        [InlineData(15, 10, "movieRepKey")]
+        public async void MoviesController_Get_ReturnOkResult(int price, int expectedPrice, string expectedCollection)
         {
             // arrange
-            var fakeMovie = new Movie {Id = "B1", Title = "Real Fake Title", Price = 3, Year = "2222"};
+            var fakeMovie = new Movie {Id = "B1", Title = "Real Fake Title", Price = price, Year = "2222"};
 
-            var fakeMoviesList = new List<Movie>{fakeMovie};
+            var fakeMoviesList = new List<Movie> {fakeMovie};
 
             _moqMovieRepository.Setup(repo =>
                     repo.FindAsync(CollectionEndPoint, It.IsAny<Func<Movie, bool>>()))
@@ -189,8 +190,8 @@ namespace TestProject1
 
             // assert
             Assert.IsType<OkObjectResult>(result.Result);
-            Assert.Equal(3, value.Member.Price);
-            Assert.Equal("movieRepKey2",value.ParentName);
+            Assert.Equal(expectedPrice, value.Member.Price);
+            Assert.Equal(expectedCollection, value.ParentName);
         }
 
         [Fact]
