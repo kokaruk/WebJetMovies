@@ -21,6 +21,7 @@ namespace TestProject1
 {
     public class MoviesControllerTest
     {
+        #region setup
         private readonly ITestOutputHelper _testOutputHelper;
         private readonly List<Movie> _fakeMoviesList;
         private readonly PaginationOptions _paginationOptionsStub;
@@ -79,6 +80,7 @@ namespace TestProject1
                     Url = urlHelperMoq.Object, ControllerContext = {HttpContext = new DefaultHttpContext()}
                 };
         }
+        #endregion
 
         [Fact]
         public async void MoviesController_GetAll_ReturnOkResultOfFullCollection()
@@ -212,7 +214,7 @@ namespace TestProject1
         }
 
         [Fact]
-        public async void MoviesController_Get_ReturnNoContentWhenNoMIvieFound()
+        public async void MoviesController_Get_ReturnNoContentWhenNoMovieFound()
         {
             // arrange
 

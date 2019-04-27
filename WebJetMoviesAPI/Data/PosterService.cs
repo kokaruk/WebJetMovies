@@ -44,30 +44,39 @@ namespace WebJetMoviesAPI.Data
             var entity = await
                 _cache.GetOrCreateAsync(id, async entry =>
                 {
-                    entry.SlidingExpiration = TimeSpan.FromMinutes(CacheLifeTime);
-                    var builder = new UriBuilder("https://api.themoviedb.org/3/search/movie") {Port = -1};
-                    var query = HttpUtility.ParseQueryString(builder.Query);
-                    query["api_key"] = _posterServiceSettings.Value.ApiKey;
-                    query["language"] = _posterServiceSettings.Value.language;
-                    query["query"] = movieTitle;
-                    query["page"] = _posterServiceSettings.Value.page;
-                    query["include_adult"] = _posterServiceSettings.Value.include_adult;
-                    query["year"] = year;
+                    try
+                    {
+                        entry.SlidingExpiration = TimeSpan.FromMinutes(CacheLifeTime);
+                        var builder = new UriBuilder("https://api.themoviedb.org/3/search/movie") {Port = -1};
+                        var query = HttpUtility.ParseQueryString(builder.Query);
+                        query["api_key"] = _posterServiceSettings.Value.ApiKey;
+                        query["language"] = _posterServiceSettings.Value.language;
+                        query["query"] = movieTitle;
+                        query["page"] = _posterServiceSettings.Value.page;
+                        query["include_adult"] = _posterServiceSettings.Value.include_adult;
+                        query["year"] = year;
 
-                    builder.Query = query.ToString();
-                    var url = builder.ToString();
-                    var response = await _htClient.Value.GetAsync(url);
-                    response.EnsureSuccessStatusCode();
+                        builder.Query = query.ToString();
+                        var url = builder.ToString();
+                        var response = await _htClient.Value.GetAsync(url);
+                        response.EnsureSuccessStatusCode();
 
-                    var result = await response.Content.ReadAsAsync<IDictionary<string, dynamic>>();
-                    var posterPath = ((JArray) result["results"])
-                        .Children<JObject>()
-                        .Select(i => i.GetValue("poster_path"))
-                        .FirstOrDefault(ii => ii != null);
+                        var result = await response.Content.ReadAsAsync<IDictionary<string, dynamic>>();
+                        var posterPath = ((JArray) result["results"])
+                            .Children<JObject>()
+                            .Select(i => i.GetValue("poster_path"))
+                            .FirstOrDefault(ii => ii != null);
 
-                    return posterPath != null
-                        ? _posterServiceSettings.Value.BaseImageUrl + posterPath.ToString()
-                        : string.Empty;
+                        return posterPath != null
+                            ? _posterServiceSettings.Value.BaseImageUrl + posterPath.ToString()
+                            : string.Empty;
+                    }
+                    catch (HttpRequestException e)
+                    {
+                        _logger.LogDebug($"error reading poster info {e.Message}");
+                        return string.Empty;
+                    }
+                    
                 });
 
             return entity;

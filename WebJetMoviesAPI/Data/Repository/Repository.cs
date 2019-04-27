@@ -36,18 +36,27 @@ namespace WebJetMoviesAPI.Data.Repository
             var allEntries = await
                 _cache.GetOrCreateAsync(_endPointUrl, async entry =>
                 {
-                    entry.SlidingExpiration = TimeSpan.FromMinutes(CacheLifeTime);
-                    var requestUri = $"{_endPointUrl}/{methodUrl}/";
+                    try
+                    {
+                        entry.SlidingExpiration = TimeSpan.FromMinutes(CacheLifeTime);
+                        var requestUri = $"{_endPointUrl}/{methodUrl}/";
 
-                    var response = await _htClient.Value.GetAsync(requestUri);
-                    response.EnsureSuccessStatusCode();
+                        var response = await _htClient.Value.GetAsync(requestUri);
+                        response.EnsureSuccessStatusCode();
 
-                    var result = await response.Content
-                        .ReadAsAsync<IDictionary<string, IEnumerable<TEntity>>>();
+                        var result = await response.Content
+                            .ReadAsAsync<IDictionary<string, IEnumerable<TEntity>>>();
 
-                    _logger.LogDebug($"Successfully returned call from \"{requestUri}\"");
+                        _logger.LogDebug($"Successfully returned call from \"{requestUri}\"");
 
-                    return result.Values.ElementAt(0);
+                        return result.Values.ElementAt(0);    
+                    }
+                    catch (HttpRequestException e)
+                    {
+                        _logger.LogDebug($"error reading full list. {e.Message}");
+                        return null;
+                    }
+                    
                 });
 
             return allEntries;
@@ -58,15 +67,24 @@ namespace WebJetMoviesAPI.Data.Repository
             var entity = await
                 _cache.GetOrCreateAsync(id, async entry =>
                 {
-                    entry.SlidingExpiration = TimeSpan.FromMinutes(CacheLifeTime);
-                    var requestUri = $"{_endPointUrl}/{methodUrl}/{id}";
-                    var response = await _htClient.Value.GetAsync(requestUri);
-                    response.EnsureSuccessStatusCode();
-                    var result = await response.Content.ReadAsAsync<TEntity>();
+                    try
+                    {
+                        entry.SlidingExpiration = TimeSpan.FromMinutes(CacheLifeTime);
+                        var requestUri = $"{_endPointUrl}/{methodUrl}/{id}";
+                        var response = await _htClient.Value.GetAsync(requestUri);
+                        response.EnsureSuccessStatusCode();
+                        
+                        var result = await response.Content.ReadAsAsync<TEntity>();
 
-                    _logger.LogDebug($"Successfully returned call from \"{requestUri}\"");
+                        _logger.LogDebug($"Successfully returned call from \"{requestUri}\"");
 
-                    return result;
+                        return result;
+                    }
+                    catch (HttpRequestException e)
+                    {
+                        _logger.LogDebug($"error reading movie info {e.Message}");
+                        return null;
+                    }
                 });
 
             return entity;
