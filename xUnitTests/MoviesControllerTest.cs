@@ -22,6 +22,7 @@ namespace TestProject1
     public class MoviesControllerTest
     {
         #region setup
+
         private readonly ITestOutputHelper _testOutputHelper;
         private readonly List<Movie> _fakeMoviesList;
         private readonly PaginationOptions _paginationOptionsStub;
@@ -80,6 +81,7 @@ namespace TestProject1
                     Url = urlHelperMoq.Object, ControllerContext = {HttpContext = new DefaultHttpContext()}
                 };
         }
+
         #endregion
 
         [Fact]
@@ -124,6 +126,25 @@ namespace TestProject1
             Assert.NotNull(response1.NextPage);
             Assert.NotNull(response2.PreviousPage);
             Assert.Null(response2.NextPage);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        public async void MoviesController_GetAll_ReturnPageItemsRequiredCount(int itemsLimit)
+        {
+            // arrange
+            _paginationOptionsStub.ItemsLimit = itemsLimit;
+            // act
+            var result = await _moviesController.GetAll(page: 1);
+
+            // assert
+            Assert.IsType<OkObjectResult>(result.Result);
+
+            var response =
+                Assert.IsAssignableFrom<PageCollectionResponse<Movie>>(((OkObjectResult) result.Result).Value);
+            
+            Assert.Equal(itemsLimit,response.Items.Count());
         }
 
         [Fact]
